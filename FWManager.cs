@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-struct Firework
+public struct Firework
 {
     public Vector3 position;
-    public float size;
+    public float explosion_size;
+    public float bolt_size;
     public int points;
     public string line;
     public float speed;
     public Color colour;
     public int chain;
+    public int seed;
 }
 
 // making firework more "realistic"
@@ -43,12 +45,14 @@ public class FWManager : MonoBehaviour
 
             Firework firework;
             firework.position = objectPos;
-            firework.size = Random.Range(1f, 5f);
+            firework.explosion_size = Random.Range(1f, 5f);
+            firework.bolt_size = Random.Range(0f, 1f);
             firework.points = Random.Range(1, 17);
             firework.line = "Straight";
             firework.speed = Random.Range(1f, 3f);
             firework.colour = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
             firework.chain = 3;
+            firework.seed = Random.Range(1, 999);
 
             generateFW(firework); //objectPos, Random.Range(1f,5f), Random.Range(1,17), "Straight", Random.Range(1f,3f), new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f), 3); //new Color(Random.Range(0,1), Random.Range(0, 1), Random.Range(0, 1), 1));
         }
@@ -74,7 +78,7 @@ public class FWManager : MonoBehaviour
             for (int i = 0; i < firework.points; i++)
             {
                 float angle = i * divider;
-                Vector3 boltTarget = new Vector3(firework.position.x + Mathf.Cos(angle + offset) * firework.size, firework.position.y + Mathf.Sin(angle + offset) * firework.size);
+                Vector3 boltTarget = new Vector3(firework.position.x + Mathf.Cos(angle + offset) * firework.explosion_size, firework.position.y + Mathf.Sin(angle + offset) * firework.explosion_size);
                 Bolt go = Object.Instantiate(obj_bolt, firework.position, Quaternion.identity).GetComponent<Bolt>(); ;
                 go.Initialize(firework, boltTarget);
             }
